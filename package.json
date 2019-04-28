@@ -1,11 +1,19 @@
 {
   "name": "monghoul",
-  "version": "0.0.1",
+  "version": "0.0.4",
   "description": "Monghoul is an ORM for Mongodb inspired by Ruby On Rails and ActiveRecord (in development)",
-  "main": "app.js",
+  "main": "controller.js",
+  "repository": {
+    "type": "git",
+    "url": "git:////github.com/3mpirical/monghoul"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Nicholas Ristagno",
-  "license": "MIT"
+  "license": "MIT",
+  "preferGlobal": true,
+  "bin": {
+    "ghoul": "./controller.js"
+  }
 }
