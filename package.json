@@ -14,9 +14,10 @@
   "license": "MIT",
   "preferGlobal": true,
   "bin": {
-    "ghoul": "./controller.js"
+    "ghoul": "./js/controller.js"
   },
   "dependencies": {
-    "mongodb": "^3.2.3"
+    "mongodb": "^3.2.3",
+    "pluralize": "^7.0.0"
   }
 }
