@@ -1,11 +1,13 @@
-const State = require("../state"),
-      Monghoul = require("../../app"),
-      ObjectId = require("mongodb").ObjectId,
-      pluralize = require("pluralize");
+const State     = require("../state"),
+      monghoul  = require("../../app"),
+      ObjectId  = require("mongodb").ObjectId,
+      pluralize = require("pluralize"),
+      fs        = require("fs"),
+      path      = require("path");
 
 
 
-class Collection {
+class Model {
     static find(options) {
         return new Promise((resolve, reject) => {
             const db = State.db();
@@ -63,7 +65,28 @@ class Collection {
     }
 }
 
-module.exports = Collection;
+const modelData = (name) => (
+`const Model = require("monghoul").Model;
+
+class ${name[0].toUpperCase() + name.slice(1)} extends Model {
+
+
+
+}`);
+
+
+const writeModelFile = (name) => {
+    return new Promise((resolve, reject) => {
+        fs.writeFile(path.resolve(__rootDir, "models", `${name[0].toUpperCase() + name.slice(1)}.js`), modelData(name), (err) => {
+            err? reject(err) : resolve("success");
+        });
+    });
+}
+
+module.exports = {
+    Model,
+    writeModelFile,
+}
 
 // class User extends Collection {
 

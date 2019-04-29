@@ -36,10 +36,10 @@ const createDbDir = (rootDirectory) => {
 
 const createCollectionsDir = (rootDirectory) => {
     return new Promise((resolve, reject) => {
-        fs.mkdir(path.resolve(rootDirectory, "collections"), (err) => {
+        fs.mkdir(path.resolve(rootDirectory, "models"), (err) => {
             if(err) reject(err);
             else{
-                console.log("CREATED: ./collections");
+                console.log("CREATED: ./models");
                 resolve("success");
             }
         });

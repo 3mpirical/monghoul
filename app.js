@@ -1,10 +1,10 @@
 const   MongoClient = require('mongodb').MongoClient,
         State = require("./js/state"),
-        Collection = require("./js/utilities/collection"),
+        modelUtils = require("./js/utilities/model");
 
 module.exports = {
 
-    Collection,
+    Model: modelUtils.Model,
 
     connect(MongodbURI, callback) {
         return new Promise((resolve, reject) => {
