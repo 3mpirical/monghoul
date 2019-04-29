@@ -1,16 +1,14 @@
-const Input = require("../../InputEmitter"),
-      fs    = require("fs");
-      path  = require("path");
+const Input     = require("../../InputEmitter"),
+      fs        = require("fs"),
+      path      = require("path"),
+      readline = require('readline');
 
-const monghoulConfigData = 
-`const path = require("path");
+const monghoulConfigData = (uri) => (
+`module.exports = {
+    uri: "${uri}",
+};`);
 
-module.exports = {
-    rootDirectory: path.resolve(__dirname, "../"),
-};
-`;
-
-const createDbDir = (rootDirectory) => {
+const createDbDir = (rootDirectory, ) => {
     return new Promise((resolve, reject) => {
         fs.mkdir(path.resolve(rootDirectory, "db", "migrations"), {recursive: true}, (err) => {
             if(err) reject(err);
@@ -46,7 +44,7 @@ const createCollectionsDir = (rootDirectory) => {
     });
 };
 
-const createMonghoulDir = (rootDirectory) => {
+const createMonghoulDir = (rootDirectory, uri) => {
     return new Promise((resolve, reject) => {
         fs.mkdir(path.resolve(rootDirectory, ".monghoul"), (err) => {
             if(err) reject(err);
@@ -56,7 +54,7 @@ const createMonghoulDir = (rootDirectory) => {
                 if(err) reject(err);
                 console.log("CREATED: ./.monghoul/schema-versions");
                 
-                fs.writeFile(path.resolve(rootDirectory, ".monghoul", "monghoul.config.js"), monghoulConfigData, (err) => {
+                fs.writeFile(path.resolve(rootDirectory, ".monghoul", "monghoul.config.js"), monghoulConfigData(uri), (err) => {
                     if(err) reject(err);
                     else {
                         console.log("CREATED: ./.monghoul/monghoul.config.js");
@@ -73,15 +71,26 @@ const createMonghoulDir = (rootDirectory) => {
 
 const handleInit = ({ option, values }) => {
     if(__rootDir === process.cwd()) return console.log("Monghoul Already Initialized In Current Directory");
-    const rootDirectory = process.cwd()
-    createDbDir(rootDirectory)
-    .then((res) => {
-        return createCollectionsDir(rootDirectory);
-    })
-    .then((res) => {
-        return createMonghoulDir(rootDirectory);
-    })
-    .catch((err) => console.log(err));
+    const rootDirectory = process.cwd();
+
+    const rl = readline.createInterface({
+        input: process.stdin,
+        output: process.stdout
+    });
+
+    rl.question('Set MongoDbURI: ', (mongodbUri) => {
+      
+        createDbDir(rootDirectory)
+        .then((res) => {
+            return createCollectionsDir(rootDirectory);
+        })
+        .then((res) => {
+            return createMonghoulDir(rootDirectory, mongodbUri);
+        })
+        .catch((err) => console.log(err));
+
+        rl.close();
+    });
 };
 
 

@@ -1,15 +1,15 @@
-const fs   = require("fs"),
+// const fs   = require("fs"),
 
-const writeCollectionFile = (name) => fs.writeFile(`
-const Collection = require("./collection");
+// const writeCollectionFile = (name) => fs.writeFile(`
+// const Collection = require("./collection");
 
-class ${name[0].toUpperCase() + name.slice(1)} extends Collection {
+// class ${name[0].toUpperCase() + name.slice(1)} extends Collection {
 
 
 
-}
-`)
+// }
+// `)
 
-module.exports = {
-    writeCollectionFile,
-}
+// module.exports = {
+//     writeCollectionFile,
+// }

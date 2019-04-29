@@ -6,18 +6,27 @@ module.exports = {
 
     Model: ModelUtils.Model,
 
-    connect(MongodbURI, callback) {
+    disconnect: State.disconnect,
+
+    connect: function(mongodbUri, callback) {
         return new Promise((resolve, reject) => {
-            MongoClient.connect(MongodbURI, (err, client) => {
+            MongoClient.connect(mongodbUri, (err, client) => {
                 if(!err) {
-                    State.setClient(client);
-                    State.setDb(client);
-    
+                    State.addNewConnection(mongodbUri, client, (err) => {
+                        if(err) {
+                            if(callback) callback(err, client);
+                            else reject(err);  
+                        } 
+                    });
+
                     if(callback) callback(err, client);
                     else resolve(client);
                     
-                } else reject(err);
+                } else {
+                    if(callback) callback(err, client);
+                    else reject(err);  
+                }
             });
         });
-    }
+    },
 };

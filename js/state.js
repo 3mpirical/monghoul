@@ -5,6 +5,7 @@ const data = JSON.parse(fs.readFileSync(path.resolve(__dirname, "../state.json")
 const State = (function() {
     ///// STATE VARIABLES /////
     const mongodbURI = data.mongodbURI;
+    const UriHash = {};
     let appClient = null;
     let appDb = null;
 
@@ -16,21 +17,39 @@ const State = (function() {
         fs.writeFileSync(path.resolve(__dirname, "state.json"), JSON.stringify(newData));
     };
 
-    const setClient = (newClient) => appClient = newClient;
-    const client = () => appClient;
+    const addNewConnection = (mongodbUri, client, callback) => {
+        if(UriHash[mongodbUri]) callback(`Error: ${mongodbUri} is already in use`);
+        else {
+            const db = client.db(client.s.options.dbName);
+            UriHash[mongodbUri] = { client, db};
+            db.on("close", () => {
+                delete UriHash[mongodbUri];
+            });
+            callback(null);
+        }
+    }
 
-    const setDb = (appClient) => appDb = appClient.db(appClient.s.options.dbName);
-    const db = () => appDb;
+    const disconnect = (mongodbUri) => {
+        if(UriHash[mongodbUri]) {
+            UriHash[mongodbUri].client.close();
+            return "success";
+        }
+        return false;
+    }
+
+    const client = (mongodbUri) => UriHash[mongodbUri].client;
+
+    const db = (mongodbUri) => UriHash[mongodbUri].db;
 
     return {
         getMongoURI,
         setMongoURI,
 
-        client,
-        setClient,
+        addNewConnection,
+        disconnect,
 
+        client,
         db,
-        setDb,
     };
 } () );
 
