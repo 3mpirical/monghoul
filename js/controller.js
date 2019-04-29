@@ -8,18 +8,18 @@ require("./routes/mainRoutes.js");
 const CTRL = (function(Input) {
 
     const emitInput = () => {
-        // Sets root directory of project installed within
+        // Sets root directory of project to the first directory where .monghoul is installed
         findParentDir(process.cwd(), '.monghoul', (err, dir)  => {
             if(err || dir === null) global.__rootDir = false;
             else global.__rootDir = dir;
 
             Input.emitArgv(process.argv);
         });
-    }
+    };
 
     return {
         emitInput,
-    }
+    };
 } (Input) );
 
 CTRL.emitInput();
