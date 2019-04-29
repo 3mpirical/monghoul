@@ -1,7 +1,6 @@
 const   MongoClient = require('mongodb').MongoClient,
         State = require("./js/state"),
         Collection = require("./js/utilities/collection"),
-        path = require("path");
 
 module.exports = {
 
@@ -22,5 +21,3 @@ module.exports = {
         });
     }
 };
-
-console.log(path.resolve(__dirname, "../"))

@@ -1,5 +1,4 @@
 const fs   = require("fs"),
-      path = require("path");
 
 const createCollectionFile = (name) => fs.writeFileSync(`
 const Collection = require("./collection");

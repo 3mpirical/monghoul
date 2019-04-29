@@ -3,10 +3,12 @@ const path = require("path");
 const data = JSON.parse(fs.readFileSync(path.resolve(__dirname, "../state.json")));
 
 const State = (function() {
+    ///// STATE VARIABLES /////
     const mongodbURI = data.mongodbURI;
     let appClient = null;
     let appDb = null;
 
+    ///// GETTERS/SETTERS /////
     const getMongoURI = () => mongodbURI;
     const setMongoURI = (mongodbURI) => {
         const newData = data;
@@ -20,19 +22,16 @@ const State = (function() {
     const setDb = (appClient) => appDb = appClient.db(appClient.s.options.dbName);
     const db = () => appDb;
 
-    const createJS = (name, javascript) => {
-        fs.writeFileSync(`./${name}.js`, javascript);
-    }
-
     return {
         getMongoURI,
         setMongoURI,
+
         client,
         setClient,
+
         db,
         setDb,
-        createJS,
-    }
-} () )
+    };
+} () );
 
 module.exports = State;

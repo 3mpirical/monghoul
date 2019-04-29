@@ -2,8 +2,6 @@ const input = require("../../InputEmitter"),
       fs    = require("fs");
       path  = require("path");
 
-console.log(path.dirname(require.main.filename));
-const rootDirectory = process.cwd();
 const monghoulConfigData = 
 `const path = require("path");
 
@@ -60,12 +58,12 @@ const createMonghoulDir = (rootDirectory) => {
 
 
 const handleInit = ({ option, values }) => {
-    createDbDir(rootDirectory)
+    createDbDir(__rootDir)
     .then((res) => {
-        return createCollectionsDir(rootDirectory);
+        return createCollectionsDir(__rootDir);
     })
     .then((res) => {
-        return createMonghoulDir(rootDirectory);
+        return createMonghoulDir(__rootDir);
     })
     .catch((err) => console.log(err));
 };
