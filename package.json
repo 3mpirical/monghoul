@@ -1,8 +1,8 @@
 {
   "name": "monghoul",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "Monghoul is an ORM for Mongodb inspired by Ruby On Rails and ActiveRecord (in development)",
-  "main": "controller.js",
+  "main": "app.js",
   "repository": {
     "type": "git",
     "url": "git://github.com/3mpirical/monghoul"
