@@ -1,4 +1,4 @@
-const input = require("../../InputEmitter"),
+const Input = require("../../InputEmitter"),
       fs    = require("fs");
       path  = require("path");
 
@@ -85,4 +85,4 @@ const handleInit = ({ option, values }) => {
 };
 
 
-input.on("init", handleInit);
+Input.on("init", handleInit);
