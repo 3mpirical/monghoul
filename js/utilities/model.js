@@ -7,7 +7,7 @@ const State     = require("../state"),
 
 
 const ModelWrapper = (function() {
-    let uri = null
+    let uri = null;
 
 
     class Model {
@@ -91,7 +91,9 @@ class ${name} extends Monghoul.Model {
 }
 
 ///// Model Configuration /////
+
 ${name}.uri(config.uri);
+// sets database uri for model
 
 
 
