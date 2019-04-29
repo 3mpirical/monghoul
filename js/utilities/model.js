@@ -1,5 +1,4 @@
 const State     = require("../state"),
-      monghoul  = require("../../app"),
       ObjectId  = require("mongodb").ObjectId,
       pluralize = require("pluralize"),
       fs        = require("fs"),

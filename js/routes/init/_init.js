@@ -8,6 +8,11 @@ const monghoulConfigData = (uri) => (
     uri: "${uri}",
 };`);
 
+const monghoulConfigJsonData = (uri) => (
+`{
+    "uri": "${uri}"
+}`);
+
 const createDbDir = (rootDirectory, ) => {
     return new Promise((resolve, reject) => {
         fs.mkdir(path.resolve(rootDirectory, "db", "migrations"), {recursive: true}, (err) => {
@@ -56,11 +61,16 @@ const createMonghoulDir = (rootDirectory, uri) => {
                 
                 fs.writeFile(path.resolve(rootDirectory, ".monghoul", "monghoul.config.js"), monghoulConfigData(uri), (err) => {
                     if(err) reject(err);
-                    else {
-                        console.log("CREATED: ./.monghoul/monghoul.config.js");
-                        console.log("================================================================================")
-                        resolve("success");
-                    }
+                    console.log("CREATED: ./.monghoul/monghoul.config.js");
+
+                    fs.writeFile(path.resolve(rootDirectory, ".monghoul", "monghoul.config.json"), monghoulConfigJsonData(uri), (err) => {
+                        if(err) reject(err);
+                        else {
+                            console.log("CREATED: ./.monghoul/monghoul.config.json");
+                            console.log("================================================================================")
+                            resolve("success");
+                        }
+                    });
                 });
             });
         });
