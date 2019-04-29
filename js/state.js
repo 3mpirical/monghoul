@@ -6,8 +6,6 @@ const State = (function() {
     ///// STATE VARIABLES /////
     const mongodbURI = data.mongodbURI;
     const UriHash = {};
-    let appClient = null;
-    let appDb = null;
 
     ///// GETTERS/SETTERS /////
     const getMongoURI = () => mongodbURI;
