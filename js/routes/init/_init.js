@@ -72,12 +72,14 @@ const createMonghoulDir = (rootDirectory) => {
 
 
 const handleInit = ({ option, values }) => {
-    createDbDir(__rootDir)
+    if(__rootDir === process.cwd()) return console.log("Monghoul Already Initialized In Current Directory");
+    const rootDirectory = process.cwd()
+    createDbDir(rootDirectory)
     .then((res) => {
-        return createCollectionsDir(__rootDir);
+        return createCollectionsDir(rootDirectory);
     })
     .then((res) => {
-        return createMonghoulDir(__rootDir);
+        return createMonghoulDir(rootDirectory);
     })
     .catch((err) => console.log(err));
 };

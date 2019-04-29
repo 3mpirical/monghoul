@@ -1,6 +1,6 @@
 {
   "name": "monghoul",
-  "version": "0.0.6",
+  "version": "0.0.8",
   "description": "Monghoul is an ORM for Mongodb inspired by Ruby On Rails and ActiveRecord (in development)",
   "main": "controller.js",
   "repository": {
@@ -18,6 +18,7 @@
   },
   "dependencies": {
     "app-root-path": "^2.2.1",
+    "find-parent-dir": "^0.3.0",
     "mongodb": "^3.2.3",
     "pluralize": "^7.0.0"
   }
