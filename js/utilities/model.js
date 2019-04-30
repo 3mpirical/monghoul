@@ -18,7 +18,7 @@ const ModelWrapper = (function() {
         static find(options) {
             return new Promise((resolve, reject) => {
                 State.db(uri, (err, db) => {
-                    if(err) reject(err);
+                    if(err) return reject(err);
                     const name = pluralize.plural(this.name.toLowerCase());
                     console.log(`collection name: ${name}`);
             
@@ -39,7 +39,7 @@ const ModelWrapper = (function() {
         static all(options) {
             return new Promise((resolve, reject) => {
                 State.db(uri, (err, db) => {
-                if(err) reject(err);
+                    if(err) return reject(err);
                     const name = pluralize.plural(this.name.toLowerCase());
                     console.log(`collection name: ${name}`);
                     
@@ -61,7 +61,7 @@ const ModelWrapper = (function() {
         static create(values) {
             return new Promise((resolve, reject) => {
                 State.db(uri, (err, db) => {
-                    if(err) reject(err);
+                    if(err) return reject(err);
                     const name = pluralize.plural(this.name.toLowerCase());
     
                     db.collection(name).insertOne(values).then((res) =>{

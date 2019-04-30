@@ -34,16 +34,15 @@ const State = (function() {
         if(UriHash[mongodbUri]) callback(null, UriHash[mongodbUri].db);
         else {
             let count = 0;
-            const reCheck = (function() {
+            const reCheck = function() {
                 setTimeout(() => {
                     if(UriHash[mongodbUri]) callback(null, UriHash[mongodbUri].db);
                     else {
-                        console.log("here")
-                        if(count > 10) callback("ERROR: Not Connected To Database After 1000 Milliseconds");
-                        else return reCheck();
+                        if(count > 10) return callback("ERROR: Not Connected To Database After 1000 Milliseconds");
+                        else count ++; return reCheck();
                     }
                 }, 100);
-            } () );
+            }; reCheck();
         }
     }
 
