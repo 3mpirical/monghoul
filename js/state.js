@@ -1,3 +1,4 @@
+const MongoClient = require('mongodb').MongoClient;
 const fs = require("fs");
 const path = require("path");
 
@@ -10,14 +11,34 @@ const State = (function() {
         if(UriHash[mongodbUri]) callback(`Error: ${mongodbUri} is already in use`);
         else {
             const db = client.db(client.s.options.dbName);
-            // global[mongodbUri] = { client, db};
-            // console.log(global)
             UriHash[mongodbUri] = { client, db};
             db.on("close", () => {
                 delete UriHash[mongodbUri];
             });
-            callback(null);
+            callback(null, db);
         }
+    }
+
+    const connect = (mongodbUri, callback) => {
+        return new Promise((resolve, reject) => {
+            MongoClient.connect(mongodbUri, (err, client) => {
+                console.log(err);
+                if(!err) {
+                    addNewConnection(mongodbUri, client, (err, db) => {
+                        if(err) {
+                            if(callback) callback(err);
+                            else reject(err);  
+                        } else {
+                            if(callback) callback({client, db});
+                            else resolve({ client, db });  
+                        }
+                    });
+                } else {
+                    if(callback) callback(err);
+                    else reject(err);  
+                }
+            });
+        });
     }
 
     const disconnect = (mongodbUri) => {
@@ -48,6 +69,7 @@ const State = (function() {
 
     return {
         addNewConnection,
+        connect,
         disconnect,
 
         client,
