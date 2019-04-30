@@ -8,7 +8,6 @@ const State     = require("../state"),
 const ModelWrapper = (function() {
     let uri = null;
 
-
     class Model {
 
         static uri(mongodbUri) {
@@ -93,7 +92,7 @@ const ModelWrapper = (function() {
     }
 
     return Model;
-} () )
+} () );
 
 const modelData = (name) => (
 `const Monghoul = require("monghoul");
@@ -133,34 +132,14 @@ module.exports = {
     writeModelFile,
 }
 
-// class User extends Collection {
-
-// }
-
-// class Student extends Collection {
-
-// }
-
-// Monghoul.connect("mongodb://127.0.0.1/monghoul-test")
-// .then((client) => {
-//    return Student.create({ name: "Harry", year: 2019 });
-// })
-// .then((res) => {
-//     console.log(res);
-//     State.client().close();
-// })
-// .catch((err) => {
-//     console.log(err);
-//     State.client().close();
-// });
-
-
 ///// This Function Gets Collection name/validator/jsonschema
-// State.db().collections((err, collections) => {
+// db.collections((err, collections) => {
 //     collections.forEach((collection) => {
-//         console.log(collection.s.name);
 //         collection.options()
-//         .then((res) => console.log(JSON.stringify(res, null, 2)) )
+//         .then((res) => {
+//             console.log(collection.s.name);
+//             console.log(JSON.stringify(res, null, 2)) 
+//         })
 //         .catch((err) => console.log(err))
 //     })
 // })
