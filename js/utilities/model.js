@@ -71,6 +71,25 @@ const ModelWrapper = (function() {
                 })
             });
         }
+
+        static createCollection(name, jsonSchema) {
+            return new Promise((resolve, reject) => {
+                State.db(uri, (err, db) => { 
+                    if(err) reject(err);
+
+                    resolve( 
+                        db.createCollection(name, { 
+                            validator: { 
+                                $jsonSchema: { 
+                                    properties: jsonSchema 
+                                }
+                            } 
+                        })
+                    );
+
+                })
+            })
+        }
     }
 
     return Model;
@@ -81,24 +100,21 @@ const modelData = (name) => (
 const config = require("../.monghoul/monghoul.config");
 
 class ${name} extends Monghoul.Model {
-///// Write Custom Methods Here /////
+    ///// Model Configuration /////
+    static config() {
+        this.uri(config.uri);
 
 
 
+    }
+
+    ///// Custom Methods /////
 
 
 
 }
 
-///// Model Configuration /////
-
-${name}.uri(config.uri);
-// sets database uri for model
-
-
-
-
-
+${name}.config();
 module.exports = ${name};
 `);
 
