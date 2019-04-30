@@ -17,57 +17,58 @@ const ModelWrapper = (function() {
 
         static find(options) {
             return new Promise((resolve, reject) => {
-                const db = State.db(uri);
-                const name = pluralize.plural(this.name.toLowerCase());
-                console.log(`collection name: ${name}`);
-        
-                if(!db) reject("ERROR: You Are Not Connected To The Database Yet");
-                
-                if(!options) {
-                    resolve( db.collection(name).find().next() );
-        
-                } else if(typeof options === "string") {
-                    if(!ObjectId.isValid(options)) reject("ERROR: Value Passed Is Not A Valid ObjectId");
-                    resolve( db.collection(name).find({_id: ObjectId(options)}).next() );
-                } else {
-                    resolve( db.collection(name).find(options).next() );
-                }
+                State.db(uri, (err, db) => {
+                    if(err) reject(err);
+                    const name = pluralize.plural(this.name.toLowerCase());
+                    console.log(`collection name: ${name}`);
+            
+                    if(!db) reject("ERROR: You Are Not Connected To The Database Yet");
+                    
+                    if(!options) {
+                        reject("ERROR: 'find' Method On Model Must Be Given A Parameter");
+                    } else if(typeof options === "string") {
+                        if(!ObjectId.isValid(options)) reject("ERROR: Value Passed Is Not A Valid ObjectId");
+                        resolve( db.collection(name).find({_id: ObjectId(options)}).next() );
+                    } else {
+                        resolve( db.collection(name).find(options).next() );
+                    }
+                })
             });
         }
 
         static all(options) {
             return new Promise((resolve, reject) => {
-                const db = State.db(uri);
-                const name = pluralize.plural(this.name.toLowerCase());
-                console.log(`collection name: ${name}`);
-        
-                if(!db) reject("ERROR: You Are Not Connected To The Database Yet");
-                
-                if(!options) {
-                    db.collection(name).find().toArray((err, docs) => {
-                        if(err) reject(err);
-                        else resolve(docs);
-                    }) 
-                } else {
-                    db.collection(name).find(options).toArray((err, docs) => {
-                        if(err) reject(err);
-                        else resolve(docs);
-                    }) 
-                }
+                State.db(uri, (err, db) => {
+                if(err) reject(err);
+                    const name = pluralize.plural(this.name.toLowerCase());
+                    console.log(`collection name: ${name}`);
+                    
+                    if(!options) {
+                        db.collection(name).find().toArray((err, docs) => {
+                            if(err) reject(err);
+                            else resolve(docs);
+                        }) 
+                    } else {
+                        db.collection(name).find(options).toArray((err, docs) => {
+                            if(err) reject(err);
+                            else resolve(docs);
+                        }) 
+                    }
+                })
             })
         }
 
         static create(values) {
             return new Promise((resolve, reject) => {
-                const db = State.db(uri);
-                const name = pluralize.plural(this.name.toLowerCase());
-
-                if(!db) reject("ERROR: You Are Not Connected To The Database Yet");
-
-                db.collection(name).insertOne(values).then((res) =>{
-                    resolve( db.collection(name).find({_id: ObjectId(res.insertedId)}).next() );
+                State.db(uri, (err, db) => {
+                    if(err) reject(err);
+                    const name = pluralize.plural(this.name.toLowerCase());
+    
+                    db.collection(name).insertOne(values).then((res) =>{
+                        resolve( db.collection(name).find({_id: ObjectId(res.insertedId)}).next() );
+                    })
+                    .catch((err) => reject(err));
                 })
-                .catch((err) => reject(err));
             });
         }
     }

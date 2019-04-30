@@ -6,36 +6,24 @@ const Input = require("../../InputEmitter"),
 
 
 Input.on("__set_uri", ({ option, values }) => {
-    if(!values[1]) return console.log("URI must be passed");
+    // if(!values[1]) return console.log("URI must be passed");
     
     fs.readFile(path.resolve(__rootDir, ".monghoul", "monghoul.config.json"), "utf8", (err, data) => {
         if(err) return console.log(err);
-        const configArr = [];
+        const monghoulJsPath = path.resolve(__rootDir, ".monghoul", "monghoul.config.js");
+        const monghoulJsonPath = path.resolve(__rootDir, ".monghoul", "monghoul.config.json");
         let config = null;
+        let configJSON = null;
 
         try {
             config = JSON.parse(data);
             config.uri = values[1];
+            configJSON = JSON.stringify(config, null, 2);
         } catch(err) {
             return console.log("ERROR: JSON In monghoul.config.json file has been corrupted");
         }
 
-
-        // Creating confifArr to be displayed in module.exports
-        for(let i in config) {
-            if(typeof config[i] === "string") {
-                configArr.push(`${i}: "${config[i]}",`);
-            } else {
-                configArr.push(`${i}: ${config[i]},`);
-            }
-        }
-
-        const monghoulConfigString = 
-`module.exports = {
-    ${configArr}
-}`;
-
-        fs.writeFile(path.resolve(__rootDir, ".monghoul", "monghoul.config.json"), JSON.stringify(config), (err) => {
+        fs.writeFile(monghoulJsonPath, configJSON, (err) => {
             if(err) return console.log("ERROR: Monghoul.config.json was not found");
             else {
                 console.log("\n================================================================================")
@@ -46,7 +34,7 @@ Input.on("__set_uri", ({ option, values }) => {
 
                 console.log("UPDATED: ./.monghoul/monghoul.config.json");
 
-                fs.writeFile(path.resolve(__rootDir, ".monghoul", "monghoul.config.js"), monghoulConfigString, (err) => {
+                fs.writeFile(monghoulJsPath, `module.exports = ${configJSON}`, (err) => {
                     if(err) return console.log("ERROR: Monghoul.config.js was not found");
                     else {
                         console.log("UPDATED: ./.monghoul/monghoul.config.js");
