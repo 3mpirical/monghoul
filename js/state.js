@@ -21,8 +21,7 @@ const State = (function() {
 
     const connect = (mongodbUri, callback) => {
         return new Promise((resolve, reject) => {
-            MongoClient.connect(mongodbUri, (err, client) => {
-                console.log(err);
+            MongoClient.connect(mongodbUri, { useNewUrlParser: true }, (err, client) => {
                 if(!err) {
                     addNewConnection(mongodbUri, client, (err, db) => {
                         if(err) {

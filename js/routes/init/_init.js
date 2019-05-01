@@ -8,7 +8,7 @@ const createDbDir = (rootDirectory, ) => {
     return new Promise((resolve, reject) => {
         fs.mkdir(path.resolve(rootDirectory, "db", "migrations"), {recursive: true}, (err) => {
             if(err) reject(err);
-            console.log("================================================================================")
+            console.log("================================================================================");
             console.log("CREATED: ./db");
             console.log("CREATED: ./db/migrations");
             
@@ -54,7 +54,7 @@ const createMonghoulDir = (rootDirectory, uri) => {
                     if(err) reject(err);
                     console.log("CREATED: ./.monghoul/monghoul.config.js");
 
-                    console.log("================================================================================")
+                    console.log("================================================================================");
                     resolve("success");
                 });
             });

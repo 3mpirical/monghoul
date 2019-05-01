@@ -94,14 +94,16 @@ const writeCollectionMigrationFile = (name, migrationArr) => {
 
     const filePath = path.resolve(__rootDir, "db", "migrations", `${Date.now()}-CreateCollection${name}-Migration.js`);
     const fileData = 
-`const Monghoul = require("monghoul");
+`#!/usr/bin/env node
+
+const Monghoul = require("monghoul");
 const config = require("../../.monghoul/monghoul.config");
 
 
 class CreateCollection${name} extends Monghoul.Migration {
     static migrate() {
         this.createCollection("${pluralize.plural(name.toLowerCase())}");
-        this.required(${requiredArr});
+        ${requiredArr.length > 0? `this.required(${requiredArr});` : "" }
 
 
 ${migrationFuncs.join("\n")}
@@ -115,18 +117,18 @@ ${migrationFuncs.join("\n")}
 CreateCollection${name}.migrate();
 `;
 
-    fs.writeFile(filePath, fileData, (err) => {
+    fs.writeFile(filePath, fileData, { mode: 0o755}, (err) => {
         if(err) return console.log(err);
         console.log("success");
-    })
-}
+    });
+};
 
 
 const MigrationWrapper = (function() {
     let create = false;
     let update = false;
     let name = null;
-    let required = [];
+    let required = null;
     let properties = {};
 
     class Migration {
@@ -152,22 +154,24 @@ const MigrationWrapper = (function() {
         }
 
         static run(uri) {
-            console.log(uri)
-            console.log("Migration Has Been Ran");
             if(create) {
                 State.connect(uri)
                 .then(({client, db}) => {
-                    db.createCollection(name, {
-                        validator: { $jsonSchema: {
-                            required: required,
-                            properties: properties,
+                    let validator = {
+                            validator: { $jsonSchema: {
+                                properties: properties,
                         }}
-                    })
+                    };
+                    if(required) validator.validator.$jsonSchema.required = required;
+
+                    db.createCollection(name, validator, (err) => {
+                        if(err) console.log(err);
+                        State.disconnect(uri);
+                    });
                 })
                 .catch((err) => console.log(err));
             }
         }
-
     }
     return Migration;
 } () );
@@ -175,7 +179,6 @@ const MigrationWrapper = (function() {
 
 module.exports = {
     parseToMigrationArray,
-    writeMigrationFile,
     writeCollectionMigrationFile,
     Migration: MigrationWrapper,
 }
