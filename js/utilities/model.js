@@ -120,9 +120,12 @@ module.exports = ${name};
 
 const writeModelFile = (name) => {
     name = `${name[0].toUpperCase() + name.slice(1)}`
+    const modelFilePath = path.resolve(__rootDir, "models", `${name}.js`);
     return new Promise((resolve, reject) => {
-        fs.writeFile(path.resolve(__rootDir, "models", `${name}.js`), modelData(name), (err) => {
-            err? reject(err) : resolve("success");
+        fs.writeFile(modelFilePath, modelData(name), (err) => {
+            if(err) reject(err);
+            console.log(`CREATED: ${modelFilePath}`);
+            resolve("success");
         });
     });
 }

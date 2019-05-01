@@ -76,24 +76,25 @@ const parseToMigrationArray = (argsArray) => {
 
 
 const writeCollectionMigrationFile = (name, migrationArr) => {
-    let requiredArr = [];
-    let migrationFuncs = [];
-    name = name[0].toUpperCase() + name.slice(1);
-
-    migrationArr.forEach((item) => {
-        if(item.type === "property") {
-            const validations = item.validations.map((validation) => {
-                const { key, value } = validation;
-                return `, { ${key}: "${value}" }`;
-            })
-            migrationFuncs.push(`        this.addProperty("${item.name}"${validations.join(" ")});`);
-        } else if(item.type === "required") {
-            requiredArr = item.items.map((item) => `"${item}"`);
-        }
-    })
-
-    const filePath = path.resolve(__rootDir, "db", "migrations", `${Date.now()}-CreateCollection${name}-Migration.js`);
-    const fileData = 
+    return new Promise((resolve, reject) => {
+        let requiredArr = [];
+        let migrationFuncs = [];
+        name = name[0].toUpperCase() + name.slice(1);
+    
+        migrationArr.forEach((item) => {
+            if(item.type === "property") {
+                const validations = item.validations.map((validation) => {
+                    const { key, value } = validation;
+                    return `, { ${key}: "${value}" }`;
+                })
+                migrationFuncs.push(`        this.addProperty("${item.name}"${validations.join(" ")});`);
+            } else if(item.type === "required") {
+                requiredArr = item.items.map((item) => `"${item}"`);
+            }
+        });
+    
+        const filePath = path.resolve(__rootDir, "db", "migrations", `${Date.now()}-CreateCollection${name}-Migration.js`);
+        const fileData = 
 `#!/usr/bin/env node
 
 const Monghoul = require("monghoul");
@@ -116,10 +117,12 @@ ${migrationFuncs.join("\n")}
 
 CreateCollection${name}.migrate();
 `;
-
-    fs.writeFile(filePath, fileData, { mode: 0o755}, (err) => {
-        if(err) return console.log(err);
-        console.log("success");
+    
+        fs.writeFile(filePath, fileData, { mode: 0o755}, (err) => {
+            if(err) reject(err);
+            console.log(`CREATED: ${filePath}`);
+            resolve("success");
+        });
     });
 };
 

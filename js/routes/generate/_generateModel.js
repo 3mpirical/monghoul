@@ -11,13 +11,16 @@ const handleGenerateModel = ({ option, values }) => {
     // 1) parse values
     const migrationArr = MigrationUtils.parseToMigrationArray(values.slice(2));
 
-    // 2) create migration
-    MigrationUtils.writeCollectionMigrationFile(name, migrationArr);
+    console.log("\n================================================================================");
 
-    // 3) create model
-    writeModelFile(name)
+    // 2) create migration
+    MigrationUtils.writeCollectionMigrationFile(name, migrationArr)
     .then((res) => {
-        console.log(res);
+        // 3) create model
+        return writeModelFile(name);
+    })
+    .then((res) => {
+        console.log("================================================================================\n");
     })
     .catch((err) => console.log(err));
 };
