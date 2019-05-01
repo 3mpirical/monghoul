@@ -1,17 +1,8 @@
-const Input     = require("../../InputEmitter"),
-      fs        = require("fs"),
-      path      = require("path"),
-      readline = require('readline');
-
-const monghoulConfigData = (uri) => (
-`module.exports = {
-    uri: "${uri}",
-};`);
-
-const monghoulConfigJsonData = (uri) => (
-`{
-    "uri": "${uri}"
-}`);
+const Input       = require("../../InputEmitter"),
+      fs          = require("fs"),
+      path        = require("path"),
+      readline    = require('readline'),
+      ConfigUtils = require("../../utilities/config");
 
 const createDbDir = (rootDirectory, ) => {
     return new Promise((resolve, reject) => {
@@ -59,18 +50,12 @@ const createMonghoulDir = (rootDirectory, uri) => {
                 if(err) reject(err);
                 console.log("CREATED: ./.monghoul/schema-versions");
                 
-                fs.writeFile(path.resolve(rootDirectory, ".monghoul", "monghoul.config.js"), monghoulConfigData(uri), (err) => {
+                ConfigUtils.writeInitialConfigFile(JSON.stringify({uri}), (err) => {
                     if(err) reject(err);
                     console.log("CREATED: ./.monghoul/monghoul.config.js");
 
-                    fs.writeFile(path.resolve(rootDirectory, ".monghoul", "monghoul.config.json"), monghoulConfigJsonData(uri), (err) => {
-                        if(err) reject(err);
-                        else {
-                            console.log("CREATED: ./.monghoul/monghoul.config.json");
-                            console.log("================================================================================")
-                            resolve("success");
-                        }
-                    });
+                    console.log("================================================================================")
+                    resolve("success");
                 });
             });
         });

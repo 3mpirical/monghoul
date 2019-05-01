@@ -17,7 +17,7 @@ const State = (function() {
             });
             callback(null, db);
         }
-    }
+    };
 
     const connect = (mongodbUri, callback) => {
         return new Promise((resolve, reject) => {
@@ -39,7 +39,7 @@ const State = (function() {
                 }
             });
         });
-    }
+    };
 
     const disconnect = (mongodbUri) => {
         if(UriHash[mongodbUri]) {
@@ -47,7 +47,7 @@ const State = (function() {
             return "success";
         }
         return false;
-    }
+    };
 
     const client = (mongodbUri) => { if(UriHash[mongodbUri]) return UriHash[mongodbUri].client }
 
@@ -65,7 +65,7 @@ const State = (function() {
                 }, 100);
             }; reCheck();
         }
-    }
+    };
 
     return {
         addNewConnection,

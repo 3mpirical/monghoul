@@ -18,7 +18,7 @@ const handleProperty = (attrName, args) => {
         let key = argArr[0];
         let value = argArr[1];
         property.validations.push({ key, value });
-     });
+    });
 
     return property;
 }
@@ -68,33 +68,17 @@ const parseToMigrationArray = (argsArray) => {
         } else {
             migrationArr.push(handleProperty(attrName, args));
         }
-
-
-
-
     });
     console.log(migrationArr);
     return migrationArr;
-}
+};
 
 
-const writeMigrationFile = (name, json) => (
-`const Monghoul = require("monghoul");
-
-class ${name} extends Monghoul.Migration {
-    static migrate() {
-
-
-        this.run();
-    }
-}
-`)
 
 const writeCollectionMigrationFile = (name, migrationArr) => {
     let requiredArr = [];
     let migrationFuncs = [];
     name = name[0].toUpperCase() + name.slice(1);
-
 
     migrationArr.forEach((item) => {
         if(item.type === "property") {
@@ -107,7 +91,6 @@ const writeCollectionMigrationFile = (name, migrationArr) => {
             requiredArr = item.items.map((item) => `"${item}"`);
         }
     })
-
 
     const filePath = path.resolve(__rootDir, "db", "migrations", `${Date.now()}-CreateCollection${name}-Migration.js`);
     const fileData = 
@@ -145,7 +128,6 @@ const MigrationWrapper = (function() {
     let name = null;
     let required = [];
     let properties = {};
-
 
     class Migration {
         static createCollection(collectionName) {
