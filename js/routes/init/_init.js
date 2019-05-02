@@ -31,14 +31,48 @@ Monghoul.connect(config.uri).then(({client, db}) => {
 
 
 
-
-Monghoul.disconnect(config.uri);
+// Write Within Callback To End
+// Monghoul.disconnect(config.uri);
 })
 .catch(console.log);
 `;
 
-const createDbDir = (rootDirectory, ) => {
+const asyncSeedsFile = 
+`#!/usr/bin/env node
+
+///// SEEDS FILE /////
+const Monghoul = require("monghoul");
+const config = require("../.monghoul/monghoul.config");
+
+(async function() {
+    const {client, db} = await Monghoul.connect(config.uri);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    Monghoul.disconnect(config.uri);
+} () );`
+
+const createDbDir = (rootDirectory, values) => {
     return new Promise((resolve, reject) => {
+        console.log(values)
+        let isAsyncSeeds = values.includes("--async-seeds", "--async-seed") 
+
         fs.mkdir(path.resolve(rootDirectory, "db", "migrations"), {recursive: true}, (err) => {
             if(err) reject(err);
             console.log("================================================================================");
@@ -49,7 +83,7 @@ const createDbDir = (rootDirectory, ) => {
                 if(err) reject(err);
                 console.log("CREATED: ./db/schema.json");
                 
-                fs.writeFile(path.resolve(rootDirectory, "db", "seeds.js"), seedsFile , { mode: 0o755}, (err) => {
+                fs.writeFile(path.resolve(rootDirectory, "db", "seeds.js"), isAsyncSeeds? asyncSeedsFile : seedsFile , { mode: 0o755}, (err) => {
                     if(err) reject(err);
                     else {
                         console.log("CREATED: ./db/seeds.js");
@@ -103,7 +137,7 @@ const handleInit = ({ option, values }) => {
 
     rl.question('Set MongoDbURI: ', (mongodbUri) => {
       
-        createDbDir(rootDirectory)
+        createDbDir(rootDirectory, values)
         .then((res) => {
             return createCollectionsDir(rootDirectory);
         })
