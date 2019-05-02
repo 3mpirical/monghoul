@@ -12,7 +12,7 @@ const fs           = require("fs");
 const getSchema = (db) => {
     return new Promise((resolve, reject) => {
         db.collections((err, collections) => {
-            if(err) reject(err);
+            if(err) return reject(err);
             let schema = {};
             let count = 0;
             
@@ -43,14 +43,15 @@ const getSchema = (db) => {
 
 const recurseMigrate = (db, migrations) => {
     return new Promise((resolve, reject) => {
-
+        
         let count = 0;
         const migrateHelper = () => {
             // execute the migration file
             const migrationPath = path.resolve(__rootDir, "db", "migrations", migrations[count]);
             execFile(migrationPath, {}, (err, stdout, stderr) => {
-                if(err) reject(console.log("EXECUTION ERROR: ", err));
-                if(stderr) reject(console.log("EXECUTION ERROR: ", stderr));
+                console.log("here");
+                if(err) return reject(console.log("EXECUTION ERROR: ", err));
+                if(stderr) return reject(console.log("EXECUTION ERROR: ", stderr));
                 if(stdout) console.log(stdout);
                 let schema;
     
@@ -64,23 +65,23 @@ const recurseMigrate = (db, migrations) => {
                         migration: migrations[count],
                         schema,
                     })
-                    .then((res) =>{
-                        const schemaFilePath = path.resolve(__rootDir, "db", "schema.json");
-                        
-                        // write the new schema.json file
-                        fs.writeFile(schemaFilePath, schema, (err) => {
-                            if(err) return reject(err);
-                            console.log(`MIGRATED: ${migrations[count]}`);
+                .then((res) =>{
+                    const schemaFilePath = path.resolve(__rootDir, "db", "schema.json");
+                    
+                    // write the new schema.json file
+                    fs.writeFile(schemaFilePath, schema, (err) => {
+                        if(err) return reject(err);
+                        console.log(`MIGRATED: ${migrations[count]}`);
 
-                            count ++;
-                            if(count !== migrations.length) {
-                                return migrateHelper();
-                            } else {
-                                resolve("success");
-                            }
-                        });
-                    })
-                    .catch((err) => reject(err));
+                        count ++;
+                        if(count !== migrations.length) {
+                            return migrateHelper();
+                        } else {
+                            resolve("success");
+                        }
+                    });
+                })
+                .catch((err) => reject(err));
     
                 })
                 .catch((err) => reject(err));

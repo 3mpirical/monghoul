@@ -14,7 +14,7 @@ const handleGenerateModel = ({ option, values }) => {
     console.log("\n================================================================================");
 
     // 2) create migration
-    MigrationUtils.writeCollectionMigrationFile(name, migrationArr)
+    MigrationUtils.writeCollectionMigrationFile(name, migrationArr, true)
     .then((res) => {
         // 3) create model
         return writeModelFile(name);

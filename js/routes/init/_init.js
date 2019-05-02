@@ -46,17 +46,12 @@ const createMonghoulDir = (rootDirectory, uri) => {
             if(err) reject(err);
             console.log("CREATED: ./.monghoul");
             
-            fs.mkdir(path.resolve(rootDirectory, ".monghoul", "schema-versions"), (err) => {
+            ConfigUtils.writeInitialConfigFile(JSON.stringify({uri}), (err) => {
                 if(err) reject(err);
-                console.log("CREATED: ./.monghoul/schema-versions");
-                
-                ConfigUtils.writeInitialConfigFile(JSON.stringify({uri}), (err) => {
-                    if(err) reject(err);
-                    console.log("CREATED: ./.monghoul/monghoul.config.js");
+                console.log("CREATED: ./.monghoul/monghoul.config.js");
 
-                    console.log("================================================================================");
-                    resolve("success");
-                });
+                console.log("================================================================================");
+                resolve("success");
             });
         });
     });
