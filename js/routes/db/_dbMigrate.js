@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-const execFile = require("child_process").execFile;
+const execFile     = require("child_process").execFile;
 const ConfigUtils  = require("../../utilities/config");
 const State        = require("../../state");
 const Input        = require("../../InputEmitter");
@@ -49,7 +49,6 @@ const recurseMigrate = (db, migrations) => {
             // execute the migration file
             const migrationPath = path.resolve(__rootDir, "db", "migrations", migrations[count]);
             execFile(migrationPath, {}, (err, stdout, stderr) => {
-                console.log("here");
                 if(err) return reject(console.log("EXECUTION ERROR: ", err));
                 if(stderr) return reject(console.log("EXECUTION ERROR: ", stderr));
                 if(stdout) console.log(stdout);

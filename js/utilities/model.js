@@ -19,7 +19,6 @@ const ModelWrapper = (function() {
                 State.db(uri, (err, db) => {
                     if(err) return reject(err);
                     const name = pluralize.plural(this.name.toLowerCase());
-                    console.log(`collection name: ${name}`);
             
                     if(!db) reject("ERROR: You Are Not Connected To The Database Yet");
                     
