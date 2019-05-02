@@ -4,6 +4,39 @@ const Input       = require("../../InputEmitter"),
       readline    = require('readline'),
       ConfigUtils = require("../../utilities/config");
 
+const seedsFile = 
+`#!/usr/bin/env node
+
+///// SEEDS FILE /////
+const Monghoul = require("monghoul");
+const config = require("../.monghoul/monghoul.config");
+
+Monghoul.connect(config.uri).then(({client, db}) => {
+// Write Seed Data Here //
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Monghoul.disconnect(config.uri);
+})
+.catch(console.log);
+`;
+
 const createDbDir = (rootDirectory, ) => {
     return new Promise((resolve, reject) => {
         fs.mkdir(path.resolve(rootDirectory, "db", "migrations"), {recursive: true}, (err) => {
@@ -16,7 +49,7 @@ const createDbDir = (rootDirectory, ) => {
                 if(err) reject(err);
                 console.log("CREATED: ./db/schema.json");
                 
-                fs.writeFile(path.resolve(rootDirectory, "db", "seeds.js"), "///// SEEDS FILE /////", (err) => {
+                fs.writeFile(path.resolve(rootDirectory, "db", "seeds.js"), seedsFile , { mode: 0o755}, (err) => {
                     if(err) reject(err);
                     else {
                         console.log("CREATED: ./db/seeds.js");
