@@ -176,6 +176,7 @@ ${name}.migrate();
     });
 };
 
+
 const MigrationWrapper = (function() {
     let create = false;
     let update = false;

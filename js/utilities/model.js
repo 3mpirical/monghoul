@@ -39,7 +39,7 @@ const ModelWrapper = (function() {
                 State.db(uri, (err, db) => {
                     if(err) return reject(err);
                     const name = pluralize.plural(this.name.toLowerCase());
-                    console.log(`collection name: ${name}`);
+                    // console.log(`collection name: ${name}`);
                     
                     if(!options) {
                         db.collection(name).find().toArray((err, docs) => {

@@ -6,5 +6,6 @@ const mainRoutes = (function() {
     require("./init/_init");
     require("./db/_dbMigrate");
     require("./db/_dbSeed");
+    require("./db/_dbRollback");
 
 } () );
